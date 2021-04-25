@@ -8,22 +8,18 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
-import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.PathResource;
 
 @Configuration
 @EnableBatchProcessing
@@ -33,14 +29,14 @@ public class SpringBatchConfig {
     public Job job(JobBuilderFactory jobBuilderFactory,
                    StepBuilderFactory stepBuilderFactory,
                    ItemReader<Product> itemReader,
-                   ItemProcessor<Product, Product> itemProcessor,
+                   //ItemProcessor<Product, Product> itemProcessor,
                    ItemWriter<Product> itemWriter
     ) {
 
         Step step = stepBuilderFactory.get("ETL-file-load")
                 .<Product, Product>chunk(100)
                 .reader(itemReader)
-                .processor(itemProcessor)
+                //.processor(itemProcessor)
                 .writer(itemWriter)
                 .build();
 
@@ -51,28 +47,18 @@ public class SpringBatchConfig {
                 .build();
     }
 
+
+
     @Bean
-    @StepScope
-    public FlatFileItemReader<Product> reader(@Value("#{jobParameters[fullPathFileName]}") String pathToFile) {
-        return new FlatFileItemReaderBuilder<Product>()
-                .name("studentItemReader")
-                .resource(new PathResource(pathToFile))
-                .lineMapper(lineMapper())
-                .linesToSkip(1)
-                .build();
+    public FlatFileItemReader<Product> itemReader() {
+
+        FlatFileItemReader<Product> flatFileItemReader = new FlatFileItemReader<>();
+        flatFileItemReader.setResource(new FileSystemResource("src/main/resources/products.csv"));
+        flatFileItemReader.setName("CSV-Reader");
+        flatFileItemReader.setLinesToSkip(1);
+        flatFileItemReader.setLineMapper(lineMapper());
+        return flatFileItemReader;
     }
-
-
-//    @Bean
-//    public FlatFileItemReader<Product> itemReader() {
-//
-//        FlatFileItemReader<Product> flatFileItemReader = new FlatFileItemReader<>();
-//        flatFileItemReader.setResource(new FileSystemResource("src/main/resources/users.csv"));
-//        flatFileItemReader.setName("CSV-Reader");
-//        flatFileItemReader.setLinesToSkip(1);
-//        flatFileItemReader.setLineMapper(lineMapper());
-//        return flatFileItemReader;
-
 
     @Bean
     public LineMapper<Product> lineMapper() {

@@ -9,7 +9,6 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
@@ -29,14 +28,12 @@ public class SpringBatchConfig {
     public Job job(JobBuilderFactory jobBuilderFactory,
                    StepBuilderFactory stepBuilderFactory,
                    ItemReader<Product> itemReader,
-                   //ItemProcessor<Product, Product> itemProcessor,
                    ItemWriter<Product> itemWriter
     ) {
 
         Step step = stepBuilderFactory.get("ETL-file-load")
                 .<Product, Product>chunk(100)
                 .reader(itemReader)
-                //.processor(itemProcessor)
                 .writer(itemWriter)
                 .build();
 

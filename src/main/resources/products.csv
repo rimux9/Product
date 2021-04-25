@@ -1,4 +1,16 @@
 id,name,category,description
-1,stalas,baldas,juodas
-2,lova,baldas,pilkas
-3,sviestuvas,elektra,led
+1,stalas,baldas,medinis
+2,lova,baldas,medinis
+3,sviestuvas,elektronika,led
+4,TV,elektronika,Samsung
+5,TV staliukas,baldas,stiklinis
+6,vaza,indai,molinis
+7,siurblys,buitine technika,Samsung
+8,audio grotuvas,elektronika,Samsung
+9,orkaite,buitine technika,AEG
+10,sklbimo masina,buitine technika,Samsung
+11,kede,baldas,medinis
+12,indaplove,buitine technika,Samsung
+13,lekste,indai,molinis
+14,puodelis,indai,molinis
+15,saukstas,indai,molinis
